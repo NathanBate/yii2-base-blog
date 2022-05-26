@@ -1,0 +1,165 @@
+{% extends "_layouts/admin_layout.twig" %}
+{% block content %}
+    <div id="userListPage">
+
+        {# semi-transparent background to dialog box #}
+        <div
+                v-if="ShowApproveRegistrationBox"
+                class="absolute top-0 left-0 bg-black opacity-75 h-screen w-full z-10 "
+        >
+        </div>
+
+        {# Dialog Box #}
+        <div
+                v-if="ShowApproveRegistrationBox"
+                class="absolute top-0 left-0 bg-none h-screen w-full flex justify-center items-center z-20 "
+        >
+            <div
+                    class="w-3/4 sm:w-full sm:m-4 md:w-1/4 md:max-w-md bg-white p-8 border border-solid border-gray-500 shadow-lg"
+            >
+                <div class="flex">
+                    <div class="leading-6" v-html="RegistrationMessage"></div>
+                </div>
+                <div class="flex">
+                    <div class="flex-auto">
+                    </div>
+                    <div class="flex-shrink p-4">
+                        <button @click="approveUser()" class="py-2 px-4 bg-blue-200 border-none">Yes</button>
+                    </div>
+                    <div class="flex-shrink p-4">
+                        <button @click="cancelApproval()" class="py-2 px-4 bg-blue-200 border-none">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Breadcrumbs #}
+        <section class="flex justify-center">
+
+            {# wrapper #}
+            <div class="w-full sm:w-full md:w-3/4 lg:w-1/2 pr-2 sm:max-w-full md:max-w-sm lg:max-w-md">
+                <div>
+                    <nav class="block text-sm text-left text-gray-600 h-12 flex items-center rounded-md">
+                        <ol class="list-none flex text-grey-dark p-0">
+                            <li><a class="no-underline text-gray-600 font-bold" href="/admin/dashboard">Dashboard</a></li>
+                            <li class="mx-2">/</li>
+                            <!-- <li><a class="no-underline text-gray-600 font-bold" href="#">Library</a></li>
+                            <li class="mx-2">/</li> -->
+                            <li class="">Users List</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </section>
+
+        {# unapproved users #}
+        <section class="flex justify-center">
+
+            {# wrapper #}
+            <div class="w-full sm:w-full md:w-3/4 lg:w-1/2 pr-2 sm:max-w-full md:max-w-sm lg:max-w-md">
+
+                {# Users that need approved #}
+                {% if unapproved_users | length > 0 %}
+
+                    <div class="pb-0">
+                        <div class="flex mb-4">
+                            <div class="flex-auto">
+                                <h2 class="{% include "_styles/mainHeading.twig" %}">Waiting Approval</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-8 bg-white border border-solid border-gray-400">
+                        <div
+                                v-for="(user,index) in unapprovedUsers"
+                                :key="'userUnapproved-'+index"
+                                class="flex py-4 px-2"
+                                :class="{'white': index % 2 === 0, 'bg-gray-300': index % 2 !== 0 }"
+                        >
+                            <div class="flex-auto">
+                                <div class="font-bold">
+                                    %% user.firstName + ' ' + user.lastName %%
+                                </div>
+                                <div class="font-normal">
+                                    %% user.email%%
+                                </div>
+                            </div>
+                            <div class="flex-shrink my-auto">
+                                <div class="flex">
+                                    <div
+                                            @click="confirmationMessage('approve', user.id, user.firstName + ' ' + user.lastName)"
+                                            class="my-auto px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#168024"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19.77 5.03l1.4 1.4L8.43 19.17l-5.6-5.6 1.4-1.4 4.2 4.2L19.77 5.03m0-2.83L8.43 13.54l-4.2-4.2L0 13.57 8.43 22 24 6.43 19.77 2.2z"/></svg>
+                                    </div>
+                                    <div
+                                            @click="confirmationMessage('deny', user.id, user.firstName + ' ' + user.lastName)"
+                                            class="my-auto px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                    >
+                                        <svg class="text-red-700 fill-current" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L16.9 18.31C15.55 19.37 13.85 20 12 20zm6.31-3.1L7.1 5.69C8.45 4.63 10.15 4 12 4c4.42 0 8 3.58 8 8 0 1.85-.63 3.55-1.69 4.9z"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endif %}
+
+            </div>
+        </section>
+
+        {# user list #}
+        <section class="flex justify-center">
+            <div class="w-full sm:w-full md:w-3/4 lg:w-1/2 pr-2 sm:max-w-full md:max-w-sm lg:max-w-md">
+
+                <div class="pb-0">
+                    <div class="flex mb-4">
+                        <div class="flex-auto">
+                            <h2 class="{% include "_styles/mainHeading.twig" %}">Users List</h2>
+                        </div>
+                        <div class="flex-shrink my-auto">
+                            <a class="no-underline text-black" href="{{ site_url }}admin/user/add/">
+                                <svg class="fill-current hover:text-gray-700" xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 0 24 24" width="32px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-8 bg-white border border-solid border-gray-400">
+                    <a
+                        v-for="(user,index) in users"
+                        :key="'user-'+index"
+                        class="no-underline text-black"
+                        :href="'{{ site_url }}admin/user/update/' + user.id"
+                    >
+                        <div
+                                class="flex py-4 px-2 hover:bg-blue-300 cursor-pointer"
+                                :class="{'white': index % 2 === 0, 'bg-gray-300': index % 2 !== 0, 'line-through': user.active === 'N' }"
+                        >
+                            <div class="flex-auto">
+                                <div class="font-bold">
+                                    %% user.firstName + ' ' + user.lastName %%
+                                </div>
+                                <div class="font-normal">
+                                    %% user.email%%
+                                </div>
+                            </div>
+                            <div class="flex-shrink my-auto">
+                                <div v-if="user.admin == 'S'">Super Admin</div>
+                                <div v-if="user.admin == 'Y'">Admin</div>
+                                <div v-if="user.admin == 'N'">Subscriber</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </div> {# Userlist Page #}
+
+{% endblock %}
+
+
+{% block vuejs %}
+
+    {% include "users/list_vuejs.twig" %}
+
+{% endblock %}

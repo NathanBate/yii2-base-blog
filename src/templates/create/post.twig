@@ -1,0 +1,43 @@
+{% extends "_layouts/admin_layout.twig" %}
+
+{% block content %}
+
+    {% include "_partials/adminPageOpen.twig" %}
+
+    <div>
+        <nav class="block text-sm text-left text-gray-600 h-12 flex items-center rounded-md">
+            <ol class="list-none flex text-grey-dark p-0">
+                <li><a class="no-underline text-gray-600 font-bold" href="/admin/dashboard">Dashboard</a></li>
+                <li class="mx-2">/</li>
+                <!-- <li><a class="no-underline text-gray-600 font-bold" href="#">Library</a></li>
+                <li class="mx-2">/</li> -->
+                <li class="">Create Post</li>
+            </ol>
+        </nav>
+    </div>
+
+    <h2 class="{% include "_styles/mainHeading.twig" %}">Create Post</h2>
+
+    <form class="mb-24" method="post">
+
+        {# Will need to add a section select sometime soon #}
+        <p class="mb-8">Blog: {{ section.title }}</p>
+        <input type="hidden" name="section" value="{{ section.id }}" />
+
+        <!-- Post Title -->
+        <label class="block text-gray-700 text-sm font-bold uppercase mb-2" for="title">Title</label>
+        <input
+                class="shadow appearance-none border w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="title"
+                type="text"
+                name="title"
+                required
+        />
+
+        <input type="submit" value="Create Post" class="mt-4  mr-2 flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-none text-sm text-white py-3 px-4"/>
+
+    </form>
+    {% include "_partials/adminPageClose.twig" %}
+
+{% endblock %}
+

@@ -1,0 +1,67 @@
+<script>
+
+    var app = new Vue({
+        el: '#userListPage',
+        components: {},
+        computed: {},
+        delimiters: ['%%','%%'],
+        data: {
+            RegistrationMessage: "",
+            ShowApproveRegistrationBox: false,
+            ApprovalUserId : -1,
+            ApprovalType : "",
+            users : [
+                {% for user in users %}
+                {
+                    "id" : "{{ user.id }}",
+                    "firstName" : "{{ user.firstName }}",
+                    "lastName" : "{{ user.lastName }}",
+                    "email" : "{{ user.email }}",
+                    "admin" : "{{ user.admin }}",
+                    "active" : "{{ user.active }}",
+                    'approved': "{{  user.approved }}",
+                },
+                {% endfor %}
+            ],
+            unapprovedUsers : [
+                {% for user in unapproved_users %}
+                {
+                    "id" : "{{ user.id }}",
+                    "firstName" : "{{ user.firstName }}",
+                    "lastName" : "{{ user.lastName }}",
+                    "email" : "{{ user.email }}",
+                    "admin" : "{{ user.admin }}",
+                    "active" : "{{ user.active }}",
+                    'approved': "{{  user.approved }}",
+                },
+                {% endfor %}
+            ],
+        },
+        methods: {
+            confirmationMessage(confirmationType, userId, name) {
+                this.ShowApproveRegistrationBox = true
+                this.ApprovalUserId = userId
+                if (confirmationType === "approve") {
+                    this.RegistrationMessage = "Are you sure you want to <b>approve</b> this user registration: " + name
+                    this.ApprovalType = "approve"
+                } else {
+                    this.RegistrationMessage = "Are you sure you want to <b>deny</b> this user registration: " + name
+                    this.ApprovalType = "deny"
+                }
+            },
+            cancelApproval() {
+                this.ShowApproveRegistrationBox = false
+                this.ApprovalUserId = -1
+                this.ApprovalType = ""
+            },
+            approveUser() {
+                if (this.ApprovalType === "approve") {
+                    location.href = "{{ site_url }}admin/user/approval/yes/" + this.ApprovalUserId
+                } else {
+                    location.href = "{{ site_url }}admin/user/approval/no/" + this.ApprovalUserId
+                }
+            },
+        },
+    })
+
+</script>

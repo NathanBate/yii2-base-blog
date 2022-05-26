@@ -1,0 +1,57 @@
+{% extends "_layouts/admin_layout.twig" %}
+
+{% block content %}
+
+    {% include "_partials/adminPageOpen.twig" %}
+
+    {% if isAdmin == true %}
+    <div>
+        <nav class="block text-sm text-left text-gray-600 h-12 flex items-center rounded-md">
+            <ol class="list-none flex text-grey-dark p-0">
+                <li><a class="no-underline text-gray-600 font-bold" href="/admin/dashboard">Dashboard</a></li>
+                <li class="mx-2">/</li>
+                <!-- <li><a class="no-underline text-gray-600 font-bold" href="#">Library</a></li>
+                <li class="mx-2">/</li> -->
+                <li class="">Posts List</li>
+            </ol>
+        </nav>
+    </div>
+
+
+    <h2 class="{% include "_styles/mainHeading.twig" %}">Posts</h2>
+
+    <div class="flex flex-col justify-center mt-8 bg-white">
+        {% if posts | length %}
+            {% for p in posts %}
+                <a href="{{ site_url }}admin/post/update/{{ p.id }}" class="font-semibold my-auto">
+                    <div class="{% if not loop.last %}border-b-solid border-b border-blue-100{% endif %} px-2 h-16 flex {% if loop.index is even %}bg-blue-100{% endif %} cursor-pointer hover:bg-gray-300">
+                        <div class="my-auto">
+
+                                {{ p.title }}
+
+                            <p class="text-gray-600 italic font-normal">{{ p.date | date('F j, Y') }}</p>
+                        </div>
+                    </div>
+
+                </a>
+            {% endfor %}
+
+        {% else %}
+
+        <div class="px-2 h-16 flex">
+            <div class="m-auto">
+                There are no posts to display.
+            </div>
+        </div>
+
+        {% endif %}
+    </div>
+
+    {% endif %} {# if isAdmin #}
+
+    {% include "_partials/adminPageClose.twig" %}
+
+    {# {% include "_partials/quill-vue.twig" %} #}
+
+{% endblock %}
+

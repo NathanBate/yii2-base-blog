@@ -1,0 +1,121 @@
+<script>
+
+    Vue.config.devtools = true;
+
+    var app = new Vue({
+        el: '#settingsDropdown',
+        name: 'settingsDropdown',
+        components: {
+        },
+        delimiters: ['%%','%%'],
+        data: {
+            user: {
+                admin: '{{ LoggedInUser.admin }}'
+            },
+            settingsMenu: [
+                {
+                    "Label" : "Your Profile",
+                    "Link" : "{{ site_url }}admin/user/profile/",
+                    "PermissionLevel" : "USER",
+                },
+                {
+                    "Label" : "Manage Users",
+                    "Link" : "{{ site_url }}admin/user/list/",
+                    "PermissionLevel" : "ADMIN",
+                },
+                /*{
+                    "Label" : "Settings",
+                    "Link" : "{{ site_url }}settings/",
+                "PermissionLevel" : "ADMIN",
+            },*/
+                {
+                    "Label" : "Logout",
+                    "Link" : "{{ site_url }}admin/logout/",
+                    "PermissionLevel" : "USER",
+                },
+            ],
+            showMenu: false,
+        },
+        methods: {
+            changeInstrument: function(instrument) {
+                this.activeInstrument = instrument;
+            },
+            toggleShow: function() {
+                this.showMenu = !this.showMenu;
+            },
+            itemClicked: function(item) {
+                this.toggleShow();
+                this.onClick(item);
+            }
+        }
+
+    })
+</script>
+
+<style>
+.anchor {
+    display: flex;
+    align-items: center;		        
+    padding: .75rem 1rem;
+    font-size: 1rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    color: #fff;
+    background: transparent;
+}
+
+.anchor::after {
+		display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: .5em;
+    vertical-align: .255em;
+    content: "";
+    border-top: .3em solid;
+    border-right: .28em solid transparent;
+    border-bottom: 0;
+    border-left: .28em solid transparent;
+}
+
+.anchor:hover {
+	color: #fff;
+	background-color: #6f81a1;	
+	cursor: pointer;
+}
+
+.menu {
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid rgba(0,0,0,.15);	
+	color: #212529;
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+	font-size: 1rem;
+	list-style: none;
+	margin: 0;
+    margin-right:1px;
+	padding: .5rem 0;
+	position: absolute;
+    left: auto;
+    right: 0;
+	text-align: left;
+}
+
+.menu-item {
+	color: #212529;
+	padding: .75rem 1.5rem;
+	transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.menu-item:hover {
+	background-color: #F4F6F6;
+	cursor: pointer;
+}
+/*
+span {
+	font-weight: bold;
+	color: #229954;
+	font-size: 1.25rem;
+}
+*/
+</style>

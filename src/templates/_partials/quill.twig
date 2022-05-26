@@ -1,0 +1,85 @@
+
+<script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+<!-- Theme included stylesheets -->
+<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+<style>
+
+    .quill-wrap {
+        max-width:900px;
+        width:100%;
+        margin-left:auto;
+        margin-right:auto;
+        margin-top:20px;
+    }
+    .info {
+        text-align:center;
+        margin-top:20px;
+    }
+    .quill-wrap .ql-active {
+        border: 1px solid #ccc !important;
+        border-radius:4px;
+    }
+    .quill-wrap button, .quill-wrap .ql-picker {
+        margin-right:2px
+    }
+
+</style>
+
+<div class="quill-wrap bg-white">
+    <!-- Create the toolbar container -->
+    <div id="toolbar">
+      <span class="ql-formats">
+        <select class="ql-header" title="Select heading style">
+          <option value="1">Heading</option>
+          <option value="2">Subheading</option>
+          <option selected>Normal</option>
+        </select>
+        <select class="ql-font" title="Select Font">
+          <option selected>Sans Serif</option>
+          <option value="serif">Serif</option>
+          <option value="monospace">Monospace</option>
+        </select>
+      </span>
+        <span class="ql-formats">
+        <button class="ql-bold" title="Bold Text"></button>
+        <button class="ql-italic" title="Italicize Text"></button>
+        <button class="ql-underline" title="Underline Text"></button>
+        <button class="ql-strike" title="Strikeout Text"></button>
+      </span>
+        <span class="ql-formats">
+        <select class="ql-color" title="Text Color"></select>
+        <select class="ql-background" title="Highlight Text"></select>
+      </span>
+        <span class="ql-formats">
+        <button class="ql-list" value="ordered" title="Number Text"></button>
+        <button class="ql-list" value="bullet" title="Bullet Text"></button>
+        <select class="ql-align" title="Align Text">
+          <option selected></option>
+          <option value="center"></option>
+          <option value="right"></option>
+          <option value="justify"></option>
+        </select>
+      </span>
+        <span class="ql-formats">
+        <button class="ql-blockquote" title="Quote"></button>
+        <button class="ql-link" title="Create a link"></button>
+        {# <button class="ql-image"></button>  #}
+        <button class="ql-code-block" title="Code Block"></button>
+        {# <button class="ql-video"></button>  #}
+      </span>
+        <span class="ql-formats">
+        {# <button class="ql-clean" title="clean"></button>  #}
+      </span>
+    </div>
+    <div id="editor">test</div>
+
+</div>
+
+<script>
+    var editor = new Quill('#editor', {
+        modules: { toolbar: '#toolbar' },
+        theme: 'snow',
+    });
+</script>

@@ -1,0 +1,14 @@
+
+<div>
+    <nav class="block text-sm text-left text-gray-600 h-12 flex items-center rounded-md">
+        <ol class="list-none flex text-grey-dark p-0">
+            <li><a class="no-underline text-gray-600 font-bold" href="/admin/dashboard">Dashboard</a></li>
+            <li class="mx-2">/</li>
+            {% if breadcrumbs.SecondLevel | length %}
+            <!-- <li><a class="no-underline text-gray-600 font-bold" href="#">Library</a></li>
+            <li class="mx-2">/</li> -->
+            <li class="">{{ breadcrumbs.SecondLevel.Label }}</li>
+            {% endif %}
+        </ol>
+    </nav>
+</div>

@@ -1,0 +1,9 @@
+{% if post.elements | length %}{% for e in post.elements %}
+    {{ loop.index-1 }} : {
+    id: {{ e.id }},
+    post: {{ post.id }},
+    type: `{{ e.type }}`,
+    order: {{ e.order }},
+    data: `{{ e.data | raw }}`,
+    } {% if not loop.last %},{% endif %}
+{% endfor %}{% endif %}

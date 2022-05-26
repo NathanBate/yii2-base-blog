@@ -1,0 +1,28 @@
+{% extends "_layouts/private_default.twig" %}
+
+{% block content %}
+    Hello World from post.twig!
+
+    <h1>{{ post.title }}</h1>
+    <div class="italic">{{ post.date | date('F j, Y') }}</div>
+
+
+    {% if post.elements | length %}
+
+        {% for e in post.elements %}
+
+            {% if e.type == "heading" %}
+                <h2>{{ e.data }}</h2>
+            {% elseif e.type == "editor" %}
+                <div>{{ e.data | raw }}</div>
+            {% elseif e.type == "picture" %}
+                <div>
+                    <img src="{{ site_url }}file/view/{{ e.data }}" />
+                </div>
+            {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endblock %}

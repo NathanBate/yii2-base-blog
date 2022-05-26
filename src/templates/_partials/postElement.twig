@@ -1,0 +1,48 @@
+<div class="flex flex-col pb-2 rounded-sm">
+    <div class="flex text-gray-500 text-sm uppercase">
+        <div >{{ elementType }}</div>
+        <div class="flex-auto"></div>
+        <div class="px-2 flex">
+            <div class="px-2 flex cursor-pointer" @click="trashElement(elementId)">
+                {% include "_partials/trashIconSvg.twig" %}
+            </div>
+            <div class="px-2 cursor-pointer">
+                <button :disabled="pageElements[elementId].order === 0" @click.prevent="swapElements(elementId, 'up')">UP</button>
+            </div>
+            <div class="px-2 cursor-pointer">
+                <button :disabled="pageElements[elementId].order === pageElements.length-1" @click.prevent="swapElements(elementId, 'down')" >DOWN</button>
+            </div>
+        </div>
+    </div>
+
+    {% if elementType == "Heading" %}
+        <input v-model="pageElements[elementId].data" type="text" class="{% include "_styles/textBox.twig" %}" />
+
+    {% elseif elementType == "Editor" %}
+        <local-quill-editor
+                class="bg-white"
+                v-model="pageElements[elementId].data"
+                ref="quillEditorB"
+                :options="editorOption"
+        >
+
+        </local-quill-editor>
+
+    {% elseif elementType == "Picture" %}
+
+        <div class="w-full h-auto flex p-8">
+            <div class="m-auto flex flex-col">
+                <div v-if="pageElements[elementId].data == ''" class="mx-auto">
+                    <label class="cursor-pointer {% include "_styles/blueButton.twig" %}">
+                        Select File to Upload.
+                        <input class="ml-0 md:ml-4 hidden" type="file"  name="fileUpload" id="fileUpload" @change="handleFileUpload( $event, elementId )"/>
+                    </label>
+                </div>
+                <div v-else class="mx-auto">
+                    <img :src="'{{ site_url }}file/view/' + pageElements[elementId].data" />
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+</div>

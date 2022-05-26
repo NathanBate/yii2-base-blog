@@ -1,0 +1,162 @@
+<script>
+
+var app = new Vue({
+    el: '#profilePage',
+    components: {    
+    },
+    computed: {
+        
+    },
+    delimiters: ['%%','%%'],
+    data: { 
+        firstnameOriginal: "{{ user.firstname }}",
+        firstname: "{{ user.firstname }}",
+        lastnameOriginal: "{{ user.lastname }}",
+        lastname: "{{ user.lastname }}",       
+        usernameOriginal: "{{ user.username }}",
+        username: "{{ user.username }}",
+        usernameNew: "{{ user.username }}",
+        emailOriginal: "{{ user.email }}",
+        email: "{{ user.email }}",
+        admin: "{{ user.admin }}",
+        active: "{{ user.active }}",
+        password: "",           
+        showUsernameChange: false,  
+        usernameAvailable: false,
+        showChangePassword: false,
+        usernameValidated: false,
+        passwordValidated: false,
+        showPasswordError: false,
+        showUsernameError: false,
+        usernameCheckFailed: true,
+        showCheckUsernameBtn : true,
+        showPassword: false,
+    },    
+    methods: {    
+        validateField: function(fieldName, value) {
+            let expr = ""
+
+            if (fieldName === "username") {
+                expr = /^[a-z]{6,}$/gm
+            } else {
+                expr = /^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$/gm
+            }
+
+            if (expr.test(value)) {
+                document.getElementById(fieldName).style.border = "black 1px solid"
+
+                if (fieldName === "username") {
+                    this.usernameValidated = true;
+                } else {
+                    this.passwordValidated = true;
+                }
+            } else {
+                document.getElementById(fieldName).style.border = "red 1px solid"
+
+                if (fieldName === "username") {
+                    this.usernameValidated = false;
+                } else {
+                    this.passwordValidated = false;
+                }
+            }
+
+            if (fieldName === "username") {
+                if (this.usernameNew !== this.username) {
+                    this.usernameAvailable = false
+                    this.usernameCheckFailed = false
+                    this.showCheckUsernameBtn = true
+                }
+
+                if (this.usernameNew === this.usernameOriginal) {
+                    this.usernameValidated = false
+                }
+            }
+        },
+        checkIfUsernameExists() {
+                        
+            payload = {
+                "username" : this.usernameNew
+            }    
+            axios.post("{{ site_url }}admin/user/check-username/",payload).then(response => {
+                if (response.data.success === false) {
+                    if (response.data.message === "logout") {
+                        location.href = "{{ site_url }}logout";
+                    }
+                } else {
+                    if (response.data.message === "unique") {
+                        this.usernameAvailable = true;
+                        this.username = this.usernameNew
+                        this.usernameCheckFailed = false
+                        this.showCheckUsernameBtn = false
+                    } else {
+                        this.usernameAvailable = false;
+                        this.username = this.usernameOriginal
+                        this.usernameCheckFailed = true
+                        this.usernameAvailable = false
+                        this.showCheckUsernameBtn = false
+                    }
+                }
+            })
+
+        },
+
+        resetForm() {
+            this.firstname = this.firstnameOriginal
+            this.lastname = this.lastnameOriginal
+            this.username = this.usernameOriginal
+            this.usernameNew = this.usernameOriginal
+            this.email = this.emailOriginal
+            this.password = ""
+            this.showUsernameChange = false;
+            this.showChangePassword = false;
+            this.usernameAvailable = false;
+            this.usernameValidated = false;
+            this.usernameCheckFailed = false;
+            this.showCheckUsernameBtn = true;
+        },
+
+        toggleVisibility(id) {
+            let el = document.querySelector("#" + id);
+            const type = el.getAttribute('type') === 'password' ? 'text' : 'password';
+            el.setAttribute('type', type);
+            this.showPassword = ! this.showPassword;
+        },
+
+        submitForm() {
+
+            let readyToSubmit = true
+
+            if (this.usernameNew !== this.usernameOriginal) {
+                if ((this.usernameValidated !== true) || (this.usernameAvailable !== true)) {
+                    readyToSubmit = false
+                    console.log("The Username is not validated")
+                    console.log("this.usernameValidated: " + this.usernameValidated)
+                }
+            }
+
+            if (this.password !== "") {
+                if (this.passwordValidated !== true) {
+                    readyToSubmit = false
+                    console.log("The Password is not validated")
+                    console.log("this.passwordValidated: " + this.passwordValidated)
+                }
+            }
+
+            if (this.firstname === '') {
+                readyToSubmit = false
+            }
+
+            if (this.lastname === '') {
+                readyToSubmit = false
+            }
+
+
+            if (readyToSubmit) {
+                document.getElementById("userUpdateForm").submit()
+            }
+
+        }
+    },
+})
+
+</script>
